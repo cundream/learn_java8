@@ -3,7 +3,9 @@ package com.lc.leran;
 import com.lc.learn.LearnJava8;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 /**
  * @program: learn_java8
@@ -53,14 +55,72 @@ public class TestLearnJava8 {
         int[][] chunks = LearnJava8.chunk(new int[]{1, 2, 3, 4, 5}, 2);
        for (int[] s: chunks){
            System.out.println("数组大小-----"+s.length);
-           for(int i : s){
-               System.out.println(i);
-           }
+           print(s);
        }
     }
 
+    @Test
+    public void contOccurrences_test() throws Exception{
+        long count = LearnJava8.contOccurrences(new int[]{1, 1, 2, 1, 2, 3}, 1);
+        System.out.println(count);
+    }
 
 
+    @Test
+    public void deepFlatten_test()throws Exception{
+        int[] flatten = LearnJava8.deepFlatten(new Object[]{1,new Object[]{2},new Object[]{3,4,5}});
+        print(flatten);
+
+    }
+
+
+    @Test
+    public void difference_test() throws  Exception{
+        int[] difference = LearnJava8.difference(new int[]{1,2,3},new int[]{1,2,4});
+        print(difference);
+    }
+
+
+    @Test
+    public void differenceWith_test() throws Exception {
+        int[] difference = LearnJava8.differenceWith(
+                new int[]{1, 4, 9, 16, 25},
+                new int[]{1, 2, 3, 6, 7},
+                (o1, o2) -> o1 - (o2 * o2)
+        );
+        print(difference);
+    }
+
+
+    @Test
+    public void distinctValuesOfArray_tset() throws  Exception{
+        int[] distinct = LearnJava8.distinctValuesOfArray(new int[]{1,2,2,1,3,4,5});
+        print(distinct);
+    }
+
+    @Test
+    public void dropElements_test() throws  Exception {
+        int[] drop = LearnJava8.dropElements(new int[]{1,2,3,4},i -> i >= 3);
+        print(drop);
+    }
+
+    @Test
+    public void dropRight_test() throws  Exception{
+        int[] drop = LearnJava8.dropRight(new int[]{1,2,3,4,5,6,7,8},3);
+        print(drop);
+    }
+
+
+    @Test
+    public void everyNth_test() throws  Exception{
+        int[] every = LearnJava8.everyNth(new int[]{1,2,3,4,5,6},3);
+        print(every);
+    }
+
+
+    private void print(int[] arrays){
+        Arrays.stream(arrays).forEach(System.out::println);
+    }
 
     private void print(OptionalInt optionalInt){
         System.out.println(optionalInt.getAsInt());
