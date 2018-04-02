@@ -267,7 +267,193 @@ public class TestLearnJava8 {
     @Test
     public void empty_array() throws Exception {
         String[] empty = LearnJava8.emptyArray(String.class);
+        print(empty);
     }
+
+
+    @Test
+    public void symmetricDifference_test() throws Exception {
+        Integer[] diff = LearnJava8.symmetricDifference(
+                new Integer[]{1, 2, 3},
+                new Integer[]{1, 4,2,6 }
+        );
+        print(diff);
+    }
+
+    @Test
+    public void take_test() throws  Exception {
+
+        Integer[] diff = LearnJava8.take(new Integer[]{1, 2, 3},2);
+        print(diff);
+
+    }
+
+
+    @Test
+    public void takeRight_test() throws  Exception {
+
+        Integer[] diff = LearnJava8.takeRight(new Integer[]{1, 2, 3},2);
+        print(diff);
+
+    }
+
+
+    @Test
+    public void union_test() throws Exception {
+        Integer[] union = LearnJava8.union(
+                new Integer[]{1, 2, 3},
+                new Integer[]{1, 2, 4,6}
+        );
+
+        print(union);
+    }
+
+
+    @Test
+    public void without_test() throws Exception {
+        Integer[] union = LearnJava8.without(
+                new Integer[]{1, 2, 4,6},5,6,7,8,9,1
+        );
+
+        print(union);
+    }
+    @Test
+    public void without_array_test() throws Exception {
+        Integer[] union = LearnJava8.without(
+                new Integer[]{1, 2, 4,6},new Integer[]{1, 2, 4,5}
+        );
+
+        print(union);
+    }
+
+
+    @Test
+    public void zip_test() throws Exception {
+        List<Object[]> zipped = LearnJava8.zip(
+                new String[]{"a", "b"},
+                new Integer[]{1, 2},
+                new Boolean[]{true, false}
+        );
+        zipped.stream().forEach(o -> print(o));
+        // zipped(0)  new Object[]{"a", 1, true}
+        // zipped(1)  new Object[]{"b", 2, false}
+    }
+
+    @Test
+    public void zip_test_2() throws Exception {
+        List<Object[]> zipped = LearnJava8.zip(
+                new String[]{"a"},
+                new Integer[]{1, 2},
+                new Boolean[]{true, false}
+        );
+        zipped.stream().forEach(o -> print(o));
+        // zipped(0)  new Object[]{"a", 1, true}
+        // zipped(1)  new Object[]{null, 2, false}
+    }
+
+    @Test
+    public void zipObject_test_1() throws Exception {
+        Map<String, Object> map = LearnJava8.zipObject(
+                new String[]{"a", "b", "c"},
+                new Integer[]{1, 2}
+        );
+        print(map);//{a=1, b=2, c=null}
+    }
+
+    @Test
+    public void zipObject_test_2() throws Exception {
+        Map<String, Object> map = LearnJava8.zipObject(
+                new String[]{"a", "b"},
+                new Integer[]{1, 2,3}
+        );
+        print(map);//{a=1, b=2}
+    }
+
+    @Test
+    public void average_test () throws  Exception{
+        int[]  arr = IntStream.rangeClosed(1,10).toArray();
+        double average = LearnJava8.average(arr);
+        print(average);
+    }
+
+    @Test
+    public void anagrams_test() throws  Exception{
+        List<String> list = LearnJava8.anagrams("lc6");
+        print(list);
+    }
+
+    @Test
+    public void byteSize() throws  Exception{
+        int size = LearnJava8.byteSize("快34");
+        print(size);
+    }
+
+
+    @Test
+    public void capitalize_test() throws Exception {
+        String  strFalse  = LearnJava8.capitalize("fooBar", false); //FooBar
+        String  strtrue= LearnJava8.capitalize("fooBar", true);//Foobar
+    }
+
+    @Test
+    public void capitalizeEveryWord_test() throws Exception {
+        String str =   LearnJava8.capitalizeEveryWord("hello world!");
+        print(str);//"Hello World!"
+
+        String str1 =   LearnJava8.capitalizeEveryWord("I am Lic!");
+        print(str1);//"I Am Lic!"
+
+
+    }
+
+
+    @Test
+    public void isAbsoluteUrl_test() throws Exception {
+      boolean url =  LearnJava8.isAbsoluteUrl("https://google.com"); //true
+        boolean url2 = LearnJava8.isAbsoluteUrl("ftp://www.myserver.net"); //true
+        boolean url3 = LearnJava8.isAbsoluteUrl("/foo/bar"); //false
+    }
+
+    @Test
+    public void mask_test() throws  Exception{
+        String mask1 = LearnJava8.mask("1234567890",4,"*");
+        String mask2 = LearnJava8.mask("1234567890",3,"*");
+        String mask3 = LearnJava8.mask("1234567890",-5,"*");
+        print(mask1);//******7890
+        print(mask2);//*******890
+        print(mask3);//12345*****
+    }
+
+    @Test
+    public void reverseString_test() throws  Exception{
+        String str = LearnJava8.reverseString("lic");
+        print(str);//cil
+    }
+
+
+    @Test
+    public void sortCharactersInString_test() throws  Exception{
+        String str = LearnJava8.sortCharactersInString("lic12anabsseg");
+        print(str);//12aabcegilnss
+    }
+
+    @Test
+    public void splitLines_test() throws Exception {
+
+        String[] splitLines = LearnJava8.splitLines("This\nis a\nmultiline\nstring.\n");
+
+        print(splitLines);
+        /**
+         * This
+         is a
+         multiline
+         string.
+
+         */
+    }
+
+
+
 
 
 

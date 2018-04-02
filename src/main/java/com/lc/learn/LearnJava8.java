@@ -3,6 +3,9 @@ package com.lc.learn;
 import java.lang.reflect.Array;
 import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -13,8 +16,10 @@ import java.util.function.IntBinaryOperator;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @program: learn_java8
@@ -467,9 +472,242 @@ public class LearnJava8 {
         return arr;
     }
 
+    /**
+     * 创建一个空数组
+     * @param clz
+     * @param <T>
+     * @return
+     */
     public static <T> T[] emptyArray(Class<T> clz) {
         return (T[]) Array.newInstance(clz, 0);
     }
+
+
+    /**
+     *
+     * @param first
+     * @param second
+     * @param <T>
+     * @return  两个数组不同的数据
+     */
+    public static <T> T[] symmetricDifference(T[] first, T[] second) {
+        Set<T> sA = new HashSet<>(Arrays.asList(first));
+        Set<T> sB = new HashSet<>(Arrays.asList(second));
+
+        return Stream.concat(
+                Arrays.stream(first).filter(a -> !sB.contains(a)),
+                Arrays.stream(second).filter(b -> !sA.contains(b))
+        ).toArray(i -> (T[]) Arrays.copyOf(new Object[0], i, first.getClass()));
+    }
+
+    /**
+     * 那数组n长度数据
+     * @param arr
+     * @param n
+     * @param <T>
+     * @return
+     */
+    public static <T> T[] take(T[] arr, int n) {
+        return Arrays.copyOfRange(arr, 0, n);
+    }
+
+
+    /**
+     * 从右边拿
+     * @param arr
+     * @param n
+     * @param <T>
+     * @return
+     */
+    public static <T> T[] takeRight(T[] arr, int n) {
+        return Arrays.copyOfRange(arr, arr.length - n, arr.length);
+    }
+
+
+    /**
+     * 合并两个数组 并去重
+     * @param first
+     * @param second
+     * @param <T>
+     * @return
+     */
+    public static <T> T[] union(T[] first, T[] second) {
+        Set<T> set = new HashSet<>(Arrays.asList(first));
+        set.addAll(Arrays.asList(second));
+        return set.toArray((T[]) Arrays.copyOf(new Object[0], 0, first.getClass()));
+    }
+
+
+    /**
+     * 返回参数中与数组中不同的数据
+     * @param arr
+     * @param elements
+     * @param <T>
+     * @return
+     */
+    public static <T> T[] without(T[] arr, T... elements) {
+        List<T> excludeElements = Arrays.asList(elements);
+        return Arrays.stream(arr)
+                .filter(el -> !excludeElements.contains(el))
+                .toArray(i -> (T[]) Arrays.copyOf(new Object[0], i, arr.getClass()));
+    }
+
+
+    /**
+     * 把多个数组中 下标相同的数据压缩为一个数组
+     * @param arrays
+     * @return 一个List集合
+     */
+    public static List<Object[]> zip(Object[]... arrays) {
+        OptionalInt max = Arrays.stream(arrays).mapToInt(arr -> arr.length).max();
+        return IntStream.range(0, max.getAsInt())
+                .mapToObj(i -> Arrays.stream(arrays)
+                        .map(arr -> i < arr.length ? arr[i] : null)
+                        .toArray())
+                .collect(Collectors.toList());
+    }
+
+
+    /**
+     * 把数组压缩为Map集合
+     * @param props key
+     * @param values value
+     * @return
+     */
+    public static Map<String, Object> zipObject(String[] props, Object[] values) {
+        return IntStream.range(0, props.length)
+                .mapToObj(i -> new AbstractMap.SimpleEntry<>(props[i], i < values.length ? values[i] : null))
+                .collect(
+                        HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+    }
+
+
+    /**
+     * 求数组中数的平均值
+     * @param arr
+     * @return
+     */
+    public static double average(int[] arr) {
+        return IntStream.of(arr)
+                .average()
+                .orElseThrow(() -> new IllegalArgumentException("Array is empty"));
+    }
+
+
+    /**
+     * 对字符串进行打乱组合
+     * @param input
+     * @return
+     */
+
+    public static List<String> anagrams(String input) {
+        if (input.length() <= 2) {
+            return input.length() == 2
+                    ? Arrays.asList(input, input.substring(1) + input.substring(0, 1))
+                    : Collections.singletonList(input);
+        }
+        return IntStream.range(0, input.length())
+                .mapToObj(i -> new AbstractMap.SimpleEntry<>(i, input.substring(i, i + 1)))
+                .flatMap(entry ->
+                        anagrams(input.substring(0, entry.getKey()) + input.substring(entry.getKey() + 1))
+                                .stream()
+                                .map(s -> entry.getValue() + s))
+                .collect(Collectors.toList());
+    }
+
+
+    /**
+     * 字符的字节数
+     * @param input
+     * @return
+     */
+    public static int byteSize(String input) {
+        return input.getBytes().length;
+    }
+
+    /**
+     *
+     * @param input
+     * @param lowerRest
+     * @return
+     */
+    public static String capitalize(String input, boolean lowerRest) {
+        return input.substring(0, 1).toUpperCase() +
+                (lowerRest
+                        ? input.substring(1, input.length()).toLowerCase()
+                        : input.substring(1, input.length()));
+    }
+
+
+    /**
+     * 单词首字母大写处理
+     * @param input
+     * @return
+     */
+    public static String capitalizeEveryWord(final String input) {
+        return Pattern.compile("\\b(?=\\w)").splitAsStream(input)
+                .map(w -> capitalize(w, false))
+                .collect(Collectors.joining());
+    }
+
+
+    /**
+     * 判断是不是绝地路径
+     * @param url
+     * @return
+     */
+    public static boolean isAbsoluteUrl(String url) {
+        return Pattern.compile("^[a-z][a-z0-9+.-]*:").matcher(url).find();
+    }
+
+
+    /**
+     * 隐藏字符
+     * @param input
+     * @param num  num > 0 从右向左显示   num<0  从左向右显示
+     * @param mask  隐藏时显示字符
+     * @return
+     */
+    public static String mask(String input, int num, String mask) {
+        int length = input.length();
+        return num > 0
+                ?
+                input.substring(0, length - num).replaceAll(".", mask)
+                        + input.substring(length - num)
+                :
+                input.substring(0, Math.negateExact(num))
+                        + input.substring(Math.negateExact(num), length).replaceAll(".", mask);
+    }
+
+
+    /**
+     * 翻转字符串
+     * @param input
+     * @return
+     */
+    public static String reverseString(String input) {
+        return new StringBuilder(input).reverse().toString();
+    }
+
+    /**
+     * 梳理字符顺序
+     * @param input
+     * @return
+     */
+    public static String sortCharactersInString(String input) {
+        return Arrays.stream(input.split("")).sorted().collect(Collectors.joining());
+    }
+
+    /**
+     * 分割行
+     * @param input
+     * @return
+     */
+    public static String[] splitLines(String input) {
+        return input.split("\\r?\\n");
+    }
+
+
 
 
 
